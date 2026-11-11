@@ -1,3 +1,4 @@
+# Modified 2026-11-11 (AICG3D): torchaudio made optional; uses aicg3d.audio_compat when it is not installed.
 # Copyright (c) 2025 SparkAudio
 #               2025 Xinsheng Wang (w.xinshawn@gmail.com)
 #
@@ -22,7 +23,8 @@ import random
 import soxr
 import soundfile
 import torch
-import torchaudio
+
+from aicg3d import audio_compat
 import numpy as np
 
 from pathlib import Path
@@ -142,7 +144,7 @@ def audio_highpass_filter(audio, sample_rate, highpass_cutoff_freq):
         highpass_cutoff_freq (int):
     """
 
-    audio = torchaudio.functional.highpass_biquad(
+    audio = audio_compat.highpass_biquad(
         torch.from_numpy(audio), sample_rate, cutoff_freq=highpass_cutoff_freq
     )
     return audio.numpy()

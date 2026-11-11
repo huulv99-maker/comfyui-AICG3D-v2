@@ -1,4 +1,5 @@
 # AICG3D 根目录 requirements.txt 故意保持为空，避免 ComfyUI Manager 在启动时自动联网安装大型依赖。
-# ComfyUI、PyTorch、torchaudio、requests、aiohttp、numpy 等运行时由 ComfyUI 本体提供。
+# ComfyUI、PyTorch、requests、aiohttp、numpy、scipy 等运行时由 ComfyUI 本体提供。
+# 注意：新版 ComfyUI 已不再依赖 torchaudio，本插件在缺少 torchaudio 时自动使用内置回退实现（aicg3d/audio_compat.py），无需安装。
 # 角色音色库、TTS、FFmpeg 合成、提示词优化等扩展功能所需的可选依赖见 requirements-optional.txt。
 # 可选功能缺依赖时，节点会给出明确提示；不会阻止 ComfyUI 或其他插件启动。

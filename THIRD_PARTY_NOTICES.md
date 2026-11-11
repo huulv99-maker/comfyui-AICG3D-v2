@@ -42,9 +42,9 @@ MIT 许可证要求：在软件的所有副本或实质性部分中保留上述�
 
 | 文件 | 状态 | 改动内容 |
 |---|---|---|
-| `aicg3d_h3goohai/audio_ops.py` | 已修改 2026-10-23 | 内部模块命名空间隔离为 `aicg3d_h3goohai` |
+| `aicg3d_h3goohai/audio_ops.py` | 已修改 2026-10-23 / 2026-11-11 | 内部模块命名空间隔离为 `aicg3d_h3goohai`；torchaudio 改为可选，重采样改用 `aicg3d.audio_compat` |
 | `aicg3d_h3goohai/conditioning.py` | 已修改 2026-10-23 | 内部模块命名空间隔离为 `aicg3d_h3goohai` |
-| `aicg3d_h3goohai/core.py` | 原样复制 | — |
+| `aicg3d_h3goohai/core.py` | 已修改 2026-11-11 | torchaudio 改为可选，重采样改用 `aicg3d.audio_compat`（ComfyUI 新版已不再提供 torchaudio） |
 | `aicg3d_h3goohai/prompt_tags.py` | 原样复制 | — |
 | `aicg3d_h3goohai/sampling.py` | 已修改 2026-10-23 | 内部模块命名空间隔离为 `aicg3d_h3goohai` |
 | `aicg3d_h3goohai/nodes.py` | 已修改 2026-09-12 / 2026-10-23 | 节点菜单分类改为 `AICG3D/H3 集成`；内部模块命名空间隔离为 `aicg3d_h3goohai` |
@@ -118,7 +118,7 @@ git rm -r skills prompt_guides
 | 原始仓库 | https://github.com/SparkAudio/Spark-TTS ；https://github.com/billwuhao/ComfyUI_SparkTTS |
 | 涉及目录 | `aicg3d_sparktts/`（推理源码、模型定义、音频工具、节点封装、内置说话人参考音频） |
 | 许可证 | Apache License 2.0，全文见 `third_party/LICENSE-ComfyUI_SparkTTS-Apache-2.0.txt` |
-| 修改情况 | **已修改 2026-10-31**：内部包命名空间隔离为 `aicg3d_sparktts`；移除麦克风录音节点依赖；推理和 Transformers 改为延迟加载；增加 Windows 小写 `tts` 目录兼容、模型完整性检测、中文缺失提示、确定性年龄 token、临时参考音频安全清理、AICG3D 命名空间节点 ID 和前端状态接口 |
+| 修改情况 | **已修改 2026-10-31**：内部包命名空间隔离为 `aicg3d_sparktts`；移除麦克风录音节点依赖；推理和 Transformers 改为延迟加载；增加 Windows 小写 `tts` 目录兼容、模型完整性检测、中文缺失提示、确定性年龄 token、临时参考音频安全清理、AICG3D 命名空间节点 ID 和前端状态接口；**2026-11-11** `utils/audio.py`、`models/bicodec.py` 的 torchaudio 依赖改为可选（改用 `aicg3d.audio_compat`） |
 
 插件随包提供 5 个 `Step-Audio-speakers` 参考 WAV。`Spark-TTS-0.5B` 模型权重不随插件分发，用户需从 Hugging Face 单独下载并遵守模型许可。
 
@@ -203,3 +203,14 @@ git rm -r prompt_presets
 - `MiniMax`、`MiniMax H3` 等名称与标识归其权利人所有，本插件仅在描述兼容性所需的范围内
   使用这些名称。
 - 本插件按 GPL-3.0-or-later 提供，**不附带任何担保**。
+
+---
+
+## 5. torchaudio — BSD 2-Clause License
+
+| 项目 | 内容 |
+|---|---|
+| 原始项目 | pytorch/audio（torchaudio） |
+| 涉及文件 | `aicg3d/audio_compat.py`：在未安装 torchaudio 时使用的重采样（windowed-sinc）、Slaney 梅尔滤波器组与 MelSpectrogram、highpass biquad 的纯 PyTorch / SciPy 实现，算法依照 torchaudio 参考实现改写 |
+| 许可证 | BSD 2-Clause，全文见 `third_party/LICENSE-torchaudio-BSD-2-Clause.txt` |
+| 说明 | 已安装 torchaudio 时优先直接调用 torchaudio；仅在其缺失或调用失败时才使用上述回退实现 |

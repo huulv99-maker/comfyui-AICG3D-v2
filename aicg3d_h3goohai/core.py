@@ -1,7 +1,8 @@
 # Copyright (C) 2026 goohai <https://github.com/goohai/Goohai-MiniMax-H3_Integration>
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# 本文件为上游 Goohai-MiniMax-H3_Integration 的原样复制，未作修改。
+# 本文件源自上游 Goohai-MiniMax-H3_Integration。
+# 已修改 2026-11-11：torchaudio 改为可选，音频重采样改用 aicg3d.audio_compat（ComfyUI 新版已不再提供 torchaudio）。
 # 原始许可证声明见 third_party/LICENSE-Goohai-MiniMax-H3_Integration-GPL-3.0-or-later.txt
 
 from __future__ import annotations
@@ -10,7 +11,8 @@ import math
 from collections.abc import Mapping
 
 import torch
-import torchaudio
+
+from aicg3d import audio_compat
 
 import comfy.model_management
 import comfy.nested_tensor
@@ -124,7 +126,7 @@ def encode_audio_once(audio_vae, audio: dict) -> torch.Tensor:
     waveform, sample_rate = validate_audio(audio)
     vae_sample_rate = int(getattr(audio_vae, "audio_sample_rate", 32000))
     if sample_rate != vae_sample_rate:
-        waveform = torchaudio.functional.resample(waveform, sample_rate, vae_sample_rate)
+        waveform = audio_compat.resample(waveform, sample_rate, vae_sample_rate)
     latent = audio_vae.encode(waveform[:1].movedim(1, -1))
     if not isinstance(latent, torch.Tensor) or latent.ndim != 4:
         raise ValueError("The audio VAE did not return [B,C,stereo,T] latent data")

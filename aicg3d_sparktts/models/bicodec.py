@@ -1,3 +1,4 @@
+# Modified 2026-11-11 (AICG3D): torchaudio made optional; uses aicg3d.audio_compat when it is not installed.
 # Copyright (c) 2025 SparkAudio
 #               2025 Xinsheng Wang (w.xinshawn@gmail.com)
 #
@@ -195,9 +196,9 @@ class BiCodec(nn.Module):
         Args:
             config (dict): Configuration parameters for MelSpectrogram.
         """
-        import torchaudio.transforms as TT
+        from aicg3d import audio_compat
 
-        self.mel_transformer = TT.MelSpectrogram(
+        self.mel_transformer = audio_compat.MelSpectrogram(
             config["sample_rate"],
             config["n_fft"],
             config["win_length"],
